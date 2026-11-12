@@ -1,35 +1,63 @@
+
 from functools import lru_cache
-import sys, time
+import sys
 
-calls_naive=0
+calls = 0
+
 def ways_naive(n):
-    global calls_naive
-    calls_naive += 1
-    if n <= 1: return 1
-    return ways_naive(n-1) + ways_naive(n-2)
+    """Ways to climb n temple steps taking 1 or 2 steps at a time."""
+    global calls
+    calls += 1
 
-calls_memo=0
+    if n <= 1:
+        return 1
+
+    return ways_naive(n - 1) + ways_naive(n - 2)
+
+
 @lru_cache(maxsize=None)
 def ways_memo(n):
-    global calls_memo
-    calls_memo += 1
-    if n <= 1: return 1
-    return ways_memo(n-1) + ways_memo(n-2)
+    global calls
+    calls += 1
 
-def ways_loop(n):
-    if n <= 1: return 1
-    a,b=1,1
-    for _ in range(2,n+1): a,b=b,a+b
+    if n <= 1:
+        return 1
+
+    return ways_memo(n - 1) + ways_memo(n - 2)
+
+
+# Naive recursion
+calls = 0
+print("naive:", ways_naive(25), "calls =", calls)
+
+# Memoised recursion
+calls = 0
+ways_memo.cache_clear()
+print("memo :", ways_memo(25), "calls =", calls)
+
+# Check answers for n = 1 to 6
+print("\nWays for n = 1 to 6:")
+for n in range(1, 7):
+    print(n, ":", ways_memo(n))
+
+# Recursion limit investigation
+print("\nRecursion limit:", sys.getrecursionlimit())
+
+try:
+    print("ways(1000):", ways_memo(1000))
+except RecursionError:
+    print("RecursionError: Maximum recursion depth exceeded")
+
+# Iterative solution - O(n) time and O(1) space
+def ways_iterative(n):
+    if n <= 1:
+        return 1
+
+    a, b = 1, 1
+
+    for i in range(2, n + 1):
+        a, b = b, a + b
+
     return b
 
-def main():
-    print("ways n=1..6:", [ways_loop(n) for n in range(1,7)])
-    for n in (10,20,25,30):
-        calls_naive=0; answer=ways_naive(n); naive_count=calls_naive
-        ways_memo.cache_clear(); calls_memo=0; memo_answer=ways_memo(n)
-        print(f"n={n}: answer={answer}, naive calls={naive_count}, memo calls={calls_memo}, equal={answer==memo_answer}")
-    ways_memo.cache_clear()
-    try: print("memo n=1000:", ways_memo(1000))
-    except RecursionError as exc: print("RecursionError at n=1000:", exc, "| limit:", sys.getrecursionlimit())
-    print("loop n=1000 has", len(str(ways_loop(1000))), "digits and no recursion stack.")
-if __name__ == "__main__": main()
+print("\nIterative result for 1000:", ways_iterative(1000))
