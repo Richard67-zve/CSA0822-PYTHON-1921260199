@@ -1,0 +1,1 @@
+COLLEGE FEST REGISTRATION SUMMARY\n----------------------------------\nDepartment files expected: 5\nFiles successfully read: 4\nMissing files: 1\nUnreadable files: 0\nAccepted unique registrations: 5\nDuplicate registrations: 1\nInvalid e-mail rows: 1\nDamaged or otherwise invalid rows: 1\nEvent-wise participant files created: 3\n
